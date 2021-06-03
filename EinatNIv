@@ -220,15 +220,24 @@ def create_classifiers():
     return [knn, forest, tree, logistic]
     
 
+##################################################################################################################
+def dummies_process(data):
+    locations = ["Street", "Taxicab", "Store", "School", "Resident",
+                 "RESTAURANT", "Hotel", "ATM"]
 
-# def dummies_process(data):
-#     dummies_loc = pd.get_dummies(data["Location Description"],
-#                                  prefix="Location Description")
-#     dummies_block = pd.get_dummies(data["Block"],
-#                                    prefix="Block")
-#     data = data.drop(columns=['Location Description', 'Block'], axis=1)
-#     data = pd.concat([data, dummies_loc, dummies_block], axis=1)
-#     return data
+    street_reg = ["STREET", "ALLEY", "ALLEY", "SIDEWALK"]
+    taxi_reg = ["TAXICAB", "BUS"]
+    store_reg = ["STORE", "SHOP"]
+    school_reg = ["SCHOOL", "COLLEGE"]
+    resident_reg = ["RESIDENT", "APARTMENT"]
+    restaurant_reg = ["RESTAURANT"]
+    hotel_reg = ["HOTEL", "MOTEL"]
+    atm_reg = ["ATM", "COIN", "CURRENCY"]
+    locations_reg = [street_reg, taxi_reg, store_reg, school_reg, resident_reg,
+                     restaurant_reg, hotel_reg, atm_reg]
+    # data = pd.concat([data, dummies_loc, dummies_block], axis=1)
+    return data
+
 
 
 if __name__ == '__main__':
