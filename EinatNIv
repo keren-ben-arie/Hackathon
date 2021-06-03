@@ -211,6 +211,7 @@ def preprocess():
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_validate = scaler.transform(X_validate)
+    return X_train, y_train, X_validate, y_validate
     
     
 def create_classifiers():
@@ -247,4 +248,10 @@ def location_per_crime(data, y):
 
 if __name__ == '__main__':
     preprocess()
+     X_train, y_train, X_validate, y_validate = preprocess()
+    CLASSIFIERS = create_classifiers()
+    CLASSIFIERS, scores_after_bagging = Bagging(X_train, y_train, T, X_validate, y_validate, CLASSIFIERS)
+    #create_plots_to_show_off(scores_after_bagging)
+    CLASSIFIERS, scores_after_boosting = Adaboost(X_train, y_train, T, X_validate, y_validate, CLASSIFIERS[1:])
+    create_plots_to_show_off_2(scores_after_boosting)
 
