@@ -1,4 +1,3 @@
-  
 import datetime
 import re
 import pandas as pd
@@ -6,14 +5,15 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
 
-crimes_dict = {'BATTERY':0,'THEFT':1,'CRIMINAL DAMAGE':2,'DECEPTIVE PRACTICE':3,'ASSAULT':4}
+crimes_dict = {'BATTERY': 0, 'THEFT': 1, 'CRIMINAL DAMAGE': 2, 'DECEPTIVE PRACTICE': 3, 'ASSAULT': 4}
+
 
 def predict(X):
     pass
 
+
 def send_police_cars(X):
     pass
-
 
 
 COLUMNS_TYPES = {'ID': 'int',
@@ -55,13 +55,6 @@ def test_apply_bool(x):
         return None
 
 
-def test_apply_datetime(x):
-    try:
-        return datetime.datetime.strptime(x, '%m/%d/%Y %H:%M:%S')
-    except ValueError:
-        return None
-
-
 def check_types_validity(data):
     for col in data:
         if col not in COLUMNS_TYPES:
@@ -73,7 +66,7 @@ def check_types_validity(data):
         if COLUMNS_TYPES[col] == 'bool':
             data[col].apply(test_apply_bool)
         if COLUMNS_TYPES[col] == 'datetime':
-            data[col].apply(test_apply_datetime)
+            data[col] = pd.to_datetime(data[col])
         else:
             continue
     return data
@@ -110,22 +103,12 @@ def clean_longitude_latitude(data):
     data['Latitude'].apply(lambda lat: None if lat not in range(40, 43) else lat)
 
 
-def check_valid_date(s):
-    str_arr = s.split(" ")
-    date = str_arr[0]
-    str_date_arr = date.split("/")
-    if int(str_date_arr[0]) < 1 or int(str_date_arr[0]) > 12:
-        return None
-    if int(str_date_arr[1]) < 1 or int(str_date_arr[1]) > 31:
-        return None
-    if int(str_date_arr[2]) > 2021:
-        return None
-
-
 def clean_dates(data):
-    data['Date'].apply(check_valid_date)
-    data['Updated On'].apply(check_valid_date)
+    data['Date'].apply(lambda y: None if y.year > 2021 else y)
+    data['Updated On'].apply(lambda y: None if y.year > 2021 else y)
 
+
+# Preprocessing
 
 def filtering(data):
     data['Case Number'] = data['Case Number'].apply(lambda str: int(str[2:]))
@@ -141,6 +124,23 @@ def filtering(data):
     return data
 
 
+def preprocess_dates(data):
+    # Setting Day Feature
+    days_dict = {'Sunday': 1, 'Monday': 2, 'Tuesday': 3, 'Wednesday': 4, 'Thursday': 5, 'Friday': 6, 'Saturday': 7}
+    data['Day'] = data['Date'].apply(lambda y: days_dict[y.strftime("%A")])
+    # Setting Time Feature
+    data['Time'] = data['Date'].apply(lambda y: int(y.strftime("%H%M")))
+    # Setting Month Feature - Optional
+
+    # Setting Updated On - differences in minutes
+    data['Updated On'] = data['Updated On'] - data['Date']
+    data['Updated On'] = data['Updated On'].apply(lambda y: y.total_seconds() / 60)
+
+    # Drop Date Feature
+    return data.drop('Date', axis=1)
+
+
+
 def process_data():
     train_set = pd.read_csv("trainCrimes.csv")
     check_types_validity(train_set)
@@ -152,12 +152,12 @@ def process_data():
     clean_community_area(train_set)
     clean_longitude_latitude(train_set)
     clean_x_y_coordinates(train_set)
-    return filtering(train_set)
+    return filtering(preprocess_dates(train_set))
 
 
 if __name__ == '__main__':
     train = process_data()
     y_train = train["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
-    X_train = train.drop("Primary Type", axis =1)
+    X_train = train.drop("Primary Type", axis=1)
     print(y_train)
     print(X_train)
