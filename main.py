@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+import KNN
 
 crimes_dict = {'BATTERY': 0, 'THEFT': 1, 'CRIMINAL DAMAGE': 2, 'DECEPTIVE PRACTICE': 3, 'ASSAULT': 4}
 
@@ -141,6 +143,7 @@ def preprocess_dates(data):
 
 
 
+
 def process_data():
     train_set = pd.read_csv("trainCrimes.csv")
     check_types_validity(train_set)
@@ -161,3 +164,10 @@ if __name__ == '__main__':
     X_train = train.drop("Primary Type", axis=1)
     print(y_train)
     print(X_train)
+    X_train = X_train.fillna(0)
+    knn = KNN.KNearest()
+    knn.fit(X_train, y_train)
+    #y_hat = knn.predict(X_train)
+    score = knn.model.score(X_train, y_train)
+    #print(y_hat)
+    print(score)
