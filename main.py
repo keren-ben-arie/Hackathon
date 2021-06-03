@@ -142,28 +142,28 @@ def preprocess_dates(data):
     return data.drop('Date', axis=1)
 
 
-def process_data():
-    train_set = pd.read_csv("trainCrimes.csv")
-    check_types_validity(train_set)
-    clean_dates(train_set)
-    clean_block(train_set)
-    clean_ward(train_set)
-    clean_year(train_set)
-    clean_arrest(train_set)
-    clean_community_area(train_set)
-    clean_longitude_latitude(train_set)
-    clean_x_y_coordinates(train_set)
-    return filtering(preprocess_dates(train_set))
+def process_data(data):
+    check_types_validity(data)
+    clean_dates(data)
+    clean_block(data)
+    clean_ward(data)
+    clean_year(data)
+    clean_arrest(data)
+    clean_community_area(data)
+    clean_longitude_latitude(data)
+    clean_x_y_coordinates(data)
+    return filtering(preprocess_dates(data))
 
 
 if __name__ == '__main__':
-    train = process_data()
+    validate = process_data(pd.read_csv("validationCrimes.csv"))
+    train = process_data(pd.read_csv("trainCrimes.csv"))
+    validate = validate.dropna()
     train = train.dropna()
     y_train = train["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
     X_train = train.drop("Primary Type", axis=1)
-    print(y_train)
-    print(X_train)
-
+    y_validate = validate["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
+    X_validate = validate.drop("Primary Type", axis=1)
     knn = KNeighborsClassifier(n_neighbors=5)
     knn.classes_ = [crimes_dict.keys()]
     knn.fit(X_train, y_train)
