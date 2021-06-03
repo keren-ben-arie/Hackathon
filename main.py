@@ -124,4 +124,6 @@ if __name__ == '__main__':
     clean_community_area(train_set)
     clean_longitude_latitude(train_set)
     clean_x_y_coordinates(train_set)
-    print(train_set)
+    y_train = train_set['Primary Types']
+    x_train = train_set.drop(['Primary Types'])
+
