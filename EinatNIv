@@ -125,10 +125,11 @@ def filtering(data):
     data['Case Number'] = data['Case Number'].apply(lambda str: int(str[2:]))
     remove_for_task1 = ['Description', 'FBI Code', 'IUCR']
     remove = ['ID', 'Year', "Location",'Location Description', 'Block']
-    for r in remove:
+    remove_cor = ['Longitude', 'Latitude', 'District']
+    for r in remove + remove_for_task1 + remove_cor:
         data = data.drop(r, axis=1)
-    for r in remove_for_task1:
-        data = data.drop(r, axis=1)
+    # for r in remove_for_task1:
+    #     data = data.drop(r, axis=1)
     binary_category = ['Arrest', 'Domestic']
     for r in binary_category:
         data[r] = data[r].apply(lambda bin: 1 if bin == True else 0)
