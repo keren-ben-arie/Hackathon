@@ -164,7 +164,17 @@ def process_data(data):
     clean_x_y_coordinates(data)
     return filtering(preprocess_dates(data))
 
-#
+def preprocess():
+    validation_path = "validationCrimes.csv"
+    train_path = "trainCrimes.csv"
+    validate = process_data(pd.read_csv(validation_path)).dropna()
+    train = process_data(pd.read_csv(train_path)).dropna()
+    y_train = train["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
+    X_train = train.drop("Primary Type", axis=1)
+    y_validate = validate["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
+    X_validate = validate.drop("Primary Type", axis=1)
+
+
 # def dummies_process(data):
 #     dummies_loc = pd.get_dummies(data["Location Description"],
 #                                  prefix="Location Description")
@@ -176,14 +186,5 @@ def process_data(data):
 
 
 if __name__ == '__main__':
-    validate = process_data(pd.read_csv("validationCrimes.csv"))
-    train = process_data(pd.read_csv("trainCrimes.csv"))
-    # train = dummies_process(train)
-    # validate = dummies_process(validate)
-    validate = validate.dropna()
-    train = train.dropna()
+    preprocess()
 
-    y_train = train["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
-    X_train = train.drop("Primary Type", axis=1)
-    y_validate = validate["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
-    X_validate = validate.drop("Primary Type", axis=1)
