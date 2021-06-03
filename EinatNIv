@@ -173,6 +173,9 @@ def preprocess():
     X_train = train.drop("Primary Type", axis=1)
     y_validate = validate["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
     X_validate = validate.drop("Primary Type", axis=1)
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_validate = scaler.transform(X_validate)
 
 
 # def dummies_process(data):
