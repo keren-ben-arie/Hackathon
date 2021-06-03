@@ -1,0 +1,7 @@
+def dummies_process(data):
+    dummies_loc = pd.get_dummies(data["Location Description"],
+                                 prefix="Location Description")
+    dummies_block = pd.get_dummies(data["Block"],
+                                   prefix="Block")
+    data = data.drop(columns=['Location Description', 'Block'], axis=1)
+    return pd.concat([data, dummies_loc, dummies_block], axis=1)
