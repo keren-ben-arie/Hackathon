@@ -1,6 +1,20 @@
+  
 import datetime
 import re
 import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeClassifier
+
+crimes_dict = {'BATTERY':0,'THEFT':1,'CRIMINAL DAMAGE':2,'DECEPTIVE PRACTICE':3,'ASSAULT':4}
+
+def predict(X):
+    pass
+
+def send_police_cars(X):
+    pass
+
+
 
 COLUMNS_TYPES = {'ID': 'int',
                  'Date': 'datetime',
@@ -113,7 +127,21 @@ def clean_dates(data):
     data['Updated On'].apply(check_valid_date)
 
 
-if __name__ == '__main__':
+def filtering(data):
+    data['Case Number'] = data['Case Number'].apply(lambda str: int(str[2:]))
+    remove_for_task1 = ['Description', 'FBI Code', 'IUCR']
+    remove = ['ID', 'Block', 'Location Description', 'Year', "Location"]
+    for r in remove:
+        data = data.drop(r, axis=1)
+    for r in remove_for_task1:
+        data = data.drop(r, axis=1)
+    binary_category = ['Arrest', 'Domestic']
+    for r in binary_category:
+        data[r] = data[r].apply(lambda bin: 1 if bin == True else 0)
+    return data
+
+
+def process_data():
     train_set = pd.read_csv("trainCrimes.csv")
     check_types_validity(train_set)
     clean_dates(train_set)
@@ -124,6 +152,12 @@ if __name__ == '__main__':
     clean_community_area(train_set)
     clean_longitude_latitude(train_set)
     clean_x_y_coordinates(train_set)
-    y_train = train_set['Primary Types']
-    x_train = train_set.drop(['Primary Types'])
+    return filtering(train_set)
 
+
+if __name__ == '__main__':
+    train = process_data()
+    y_train = train["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
+    X_train = train.drop("Primary Type", axis =1)
+    print(y_train)
+    print(X_train)
