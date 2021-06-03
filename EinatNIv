@@ -17,11 +17,25 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 crimes_dict = {'BATTERY': 0, 'THEFT': 1, 'CRIMINAL DAMAGE': 2, 'DECEPTIVE PRACTICE': 3, 'ASSAULT': 4}
+CLASSIFIERS = []
+T = 10
 
+def most_frequent(List):
+    return max(set(List), key=List.count)
 
 def predict(X):
-    pass
-
+    y_hats = []  # list of y vectors
+    winning_y = []
+    for classifier in CLASSIFIERS:
+        y_hats.append(classifier.predict(X))
+    j = 0
+    while j < len(y_hats[0]):
+        col_matrix = []
+        for i in range(len(y_hats)):
+            col_matrix.append(y_hats[i][j])
+        winning_y[j] = most_frequent(col_matrix)
+        j += 1
+    return winning_y
 
 def send_police_cars(X):
     pass
@@ -152,6 +166,25 @@ def preprocess_dates(data):
     return data.drop('Date', axis=1)
 
 
+def Bagging(x_train, y_train, T, x_validate, y_validate, classifiers):
+    scores = [0] * len(classifiers)
+    for i in range(len(classifiers)):
+        classifiers[i] = BaggingClassifier(base_estimator=classifiers[i], n_estimators=T, random_state=0).fit \
+            (x_train, y_train)
+        scores[i] = classifiers[i].score(x_validate, y_validate)
+    return classifiers, scores
+
+
+def Adaboost(x_train, y_train, T, x_validate, y_validate, classifiers):
+    scores = [0] * len(classifiers)
+    y_hats = []
+    for i in range(len(classifiers)):
+        classifiers[i] = AdaBoostClassifier(base_estimator=classifiers[i], n_estimators=T, random_state=0).fit \
+            (x_train, y_train)
+        y_hats[i] = classifiers[i].predict(x_validate)
+        scores[i] = classifiers[i].score(x_validate, y_validate)
+    return classifiers, scores, y_hats
+    
 def process_data(data):
     check_types_validity(data)
     clean_dates(data)
