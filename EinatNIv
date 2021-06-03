@@ -204,8 +204,10 @@ def preprocess():
     train = process_data(pd.read_csv(train_path)).dropna()
     y_train = train["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
     X_train = train.drop("Primary Type", axis=1)
+    X_train = location_per_crime(X_train, y_train)
     y_validate = validate["Primary Type"].apply(lambda bin: crimes_dict.get(bin))
     X_validate = validate.drop("Primary Type", axis=1)
+    X_validate = location_per_crime(X_validate, y_validate)
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_validate = scaler.transform(X_validate)
@@ -219,25 +221,28 @@ def create_classifiers():
     logistic = LogisticRegression(solver='liblinear')
     return [knn, forest, tree, logistic]
     
-
-##################################################################################################################
-def dummies_process(data):
-    locations = ["Street", "Taxicab", "Store", "School", "Resident",
-                 "RESTAURANT", "Hotel", "ATM"]
-
-    street_reg = ["STREET", "ALLEY", "ALLEY", "SIDEWALK"]
-    taxi_reg = ["TAXICAB", "BUS"]
-    store_reg = ["STORE", "SHOP"]
-    school_reg = ["SCHOOL", "COLLEGE"]
-    resident_reg = ["RESIDENT", "APARTMENT"]
-    restaurant_reg = ["RESTAURANT"]
-    hotel_reg = ["HOTEL", "MOTEL"]
-    atm_reg = ["ATM", "COIN", "CURRENCY"]
-    locations_reg = [street_reg, taxi_reg, store_reg, school_reg, resident_reg,
-                     restaurant_reg, hotel_reg, atm_reg]
-    # data = pd.concat([data, dummies_loc, dummies_block], axis=1)
-    return data
-
+def location_per_crime(data, y):
+    dict_crimes = {}
+    crimes = y
+    for index, row in data.iterrows():
+        crime = crimes[index]
+        location = row['Location Description']
+        if location is None:
+            continue
+        if location not in dict_crimes.keys():
+            dict_crimes[location] = [0,0,0,0,0]
+        dict_crimes[location][crime] = dict_crimes[location][crime] + 1
+    df = pd.DataFrame(0, index=list(range(len(crimes))), columns=list(crimes_dict.values()))
+    for index, row in data.iterrows():
+        location = row['Location Description']
+        if location is None:
+            continue
+        df[0][index] = dict_crimes[location][0]
+        df[1][index] = dict_crimes[location][1]
+        df[2][index] = dict_crimes[location][2]
+        df[3][index] = dict_crimes[location][3]
+        df[4][index] = dict_crimes[location][4]
+    return pd.concat([data,df],axis=1)
 
 
 if __name__ == '__main__':
