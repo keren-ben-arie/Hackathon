@@ -1,0 +1,2 @@
+Cleaning the data - 
+cleaning each block by using a regular expration "[0-9]*X{1,2} [NESW] [A-Z]+ [A-Z]*"
