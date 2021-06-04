@@ -39,8 +39,11 @@ def most_frequent(List):
 
 
 def predict(X):
-    y_hats = []  # list of y vectors
+   y_hats = []  # list of y vectors
     winning_y = []
+    X = preprocess_dates(X).dropna()
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
     for classifier in CLASSIFIERS:
         y_hats.append(classifier.predict(X))
     j = 0
