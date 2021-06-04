@@ -31,7 +31,7 @@ def most_frequent(List):
 def predict(X):
     y_hats = []  # list of y vectors
     winning_y = []
-    X = train_models.preprocess_dates(X).dropna()
+    X = train_models.process_data(X).dropna()
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
     for classifier in CLASSIFIERS:
