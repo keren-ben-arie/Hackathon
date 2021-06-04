@@ -187,8 +187,7 @@ def create_classifiers():
 
     return [knn, forest, tree, logistic]
 
-
-if __name__ == '__main__':
+def train():
     """ main function to train the model """
     X_train, y_train = preprocess()
     CLASSIFIERS = create_classifiers()
@@ -201,4 +200,5 @@ if __name__ == '__main__':
     pkl_files = ["knn_pickle.pkl", "forest_pkl.pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
     for i in range(len(pkl_files)):
         with open(pkl_files[i], 'wb') as file:
-            pickle.dump(models[i], file, protocol= pickle.HIGHEST_PROTOCOL)
+            pickle.dump(models[i], file, protocol=pickle.HIGHEST_PROTOCOL)
+    
