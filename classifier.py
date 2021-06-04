@@ -1,21 +1,5 @@
-import datetime
-import re
 import numpy as np
-import pandas as pd
-from sklearn.datasets import load_iris
-from sklearn.model_selection import cross_val_score
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import RepeatedStratifiedKFold
-from sklearn.multioutput import MultiOutputClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, \
-    BaggingClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-import pickle
-import pickle
+from sklearn.cluster import KMeans
 from train_models import *
 
 pkl_files = ["knn_pickle.pkl", "forest_pkl.pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
@@ -41,7 +25,7 @@ def most_frequent(List):
 
 
 def predict(X):
-   y_hats = []  # list of y vectors
+    y_hats = []  # list of y vectors
     winning_y = []
     X = preprocess_dates(X).dropna()
     scaler = StandardScaler()
@@ -56,6 +40,9 @@ def predict(X):
         winning_y[j] = most_frequent(col_matrix)
         j += 1
     return winning_y
+
+def calc_dist(p0, p1):
+    return np.linalg.norm(p0 - p1)
 
 def send_police_cars(X):
     """
@@ -115,4 +102,3 @@ def send_police_cars(X):
         winners_to_return.append(lst_final_winners)
 
     return winners_to_return
-
