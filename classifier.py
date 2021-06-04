@@ -13,7 +13,7 @@ def get_from_pickle():
     for i in range(len(pkl_files)):
         with open(pkl_files[i], 'rb') as file:
             pickle_model = pickle.load(file)
-            classifiers[i] = pickle_model
+            classifiers.append(pickle_model)
     return classifiers
 
 
