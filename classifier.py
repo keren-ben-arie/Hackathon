@@ -15,11 +15,13 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, \
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 import pickle
+import pickle
+from train_models import *
 
-pkl_files = ["knn_pickle.pkl", "forest_pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
+pkl_files = ["knn_pickle.pkl", "forest_pkl.pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
 
 crimes_dict = {'BATTERY': 0, 'THEFT': 1, 'CRIMINAL DAMAGE': 2, 'DECEPTIVE PRACTICE': 3, 'ASSAULT': 4}
-T = 20
+T = 10
 
 
 def get_from_pickle():
