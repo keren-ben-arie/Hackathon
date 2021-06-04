@@ -168,7 +168,7 @@ def Adaboost(x_train, y_train, T, classifiers):
 
 def process_data(data):
     """ processing and cleaning the data"""
-    check_types_validity(data)
+    data = check_types_validity(data)
     clean_dates(data)
     clean_ward(data)
     clean_community_area(data)
@@ -187,6 +187,7 @@ def create_classifiers():
 
     return [knn, forest, tree, logistic]
 
+
 def train():
     """ main function to train the model """
     X_train, y_train = preprocess()
@@ -201,4 +202,4 @@ def train():
     for i in range(len(pkl_files)):
         with open(pkl_files[i], 'wb') as file:
             pickle.dump(models[i], file, protocol=pickle.HIGHEST_PROTOCOL)
-    
+
