@@ -29,6 +29,7 @@ def most_frequent(List):
 
 
 def predict(X):
+    X = pd.read_csv(X)
     y_hats = []  # list of y vectors
     winning_y = []
     X = train_models.process_data(X).dropna()
