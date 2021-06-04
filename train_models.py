@@ -180,7 +180,7 @@ def create_classifiers():
     """ creating all the classifiers to work on """
     knn = KNeighborsClassifier(n_neighbors=5)
     forest = RandomForestClassifier(n_estimators=20, criterion='entropy',
-                                    random_state=42)
+                                    random_state=42, max_depth=5)
     tree = DecisionTreeClassifier(criterion="gini", random_state=100,
                                   max_depth=3, min_samples_leaf=5)
     logistic = LogisticRegression(solver='liblinear')
@@ -192,11 +192,14 @@ if __name__ == '__main__':
     """ main function to train the model """
     X_train, y_train = preprocess()
     CLASSIFIERS = create_classifiers()
-    CLASSIFIERS_1 = Bagging(X_train, y_train, T, CLASSIFIERS[:2])
+    CLASSIFIERS_1 = Bagging(X_train, y_train, T, CLASSIFIERS[1:2])
     CLASSIFIERS_2 = Adaboost(X_train, y_train, T, CLASSIFIERS[2:])
-    models = CLASSIFIERS_1 + CLASSIFIERS_2
+    knn = KNeighborsClassifier(n_neighbors=5)
+    knn.fit(X_train, y_train)
+    models = [knn]
+    models += CLASSIFIERS_1 + CLASSIFIERS_2
     pkl_files = ["knn_pickle.pkl", "forest_pkl.pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
     for i in range(len(pkl_files)):
         with open(pkl_files[i], 'wb') as file:
-            pickle.dump(models[i], file)
+            pickle.dump(models[i], file, protocol= pickle.HIGHEST_PROTOCOL)
 
