@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.cluster import KMeans
-from train_models import *
+import pickle
 
 pkl_files = ["knn_pickle.pkl", "forest_pkl.pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
 
