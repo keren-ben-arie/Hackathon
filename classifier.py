@@ -42,7 +42,7 @@ def predict(X):
         col_matrix = []
         for i in range(len(y_hats)):
             col_matrix.append(y_hats[i][j])
-        winning_y[j] = most_frequent(col_matrix)
+        winning_y.append(most_frequent(col_matrix))
         j += 1
     return winning_y
 
