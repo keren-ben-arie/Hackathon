@@ -68,11 +68,11 @@ def send_police_cars(X):
     train = train_co[["X Coordinate", "Y Coordinate", "hour", "minutes"]].dropna()
     winners_to_return = []
     for date in X:
-        kmeans = KMeans(n_clusters=700)
+        kmeans = KMeans(n_clusters=200)
         coords_KMeans = kmeans.fit(train)
         lables = coords_KMeans.labels_
         cluster_centers = coords_KMeans.cluster_centers_
-        score = dict(zip(range(700), np.zeros(700)))
+        score = dict(zip(range(200), np.zeros(200)))
         for i in range(len(lables)):
             p0 = cluster_centers[lables[i]]
             p1 = train.iloc[i]
