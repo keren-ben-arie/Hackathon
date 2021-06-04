@@ -1,6 +1,10 @@
 import numpy as np
 from sklearn.cluster import KMeans
 import pickle
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+import train_models
 
 pkl_files = ["knn_pickle.pkl", "forest_pkl.pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
 
@@ -27,7 +31,7 @@ def most_frequent(List):
 def predict(X):
     y_hats = []  # list of y vectors
     winning_y = []
-    X = preprocess_dates(X).dropna()
+    X = train_models.preprocess_dates(X).dropna()
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
     for classifier in CLASSIFIERS:
