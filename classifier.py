@@ -102,7 +102,7 @@ def send_police_cars(X):
             win2 = winner[1]
             win3 = int(winner[2])
             win4 = int(winner[3])
-            win_unite = date.strftime("%m/%d/%Y ") + str(win3) + ":" + str(win4) + ":" + "00"
+            win_unite = str(win3) + ":" + str(win4) + ":" + "00"
             lst_final_winners.append((win1, win2, win_unite))
         winners_to_return.append(lst_final_winners)
 
