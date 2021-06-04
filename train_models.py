@@ -10,7 +10,7 @@ import pickle
 crimes_dict = {'BATTERY': 0, 'THEFT': 1, 'CRIMINAL DAMAGE': 2,
                'DECEPTIVE PRACTICE': 3, 'ASSAULT': 4}
 CLASSIFIERS = []
-T = 20
+T = 10
 
 
 def most_frequent(List):
@@ -136,7 +136,7 @@ def preprocess_dates(data):
 def preprocess():
     """ main function that does the preprocessing """
     train_path = "Dataset_crimes.csv"
-    train_path2 = "crimes_dataset_part2 .csv"
+    train_path2 = "crimes_dataset_part2.csv"
     train = process_data(pd.read_csv(train_path)).dropna()
     train2 = process_data(pd.read_csv(train_path2)).dropna()
     train_co = pd.concat([train, train2], axis=0, ignore_index=True)
@@ -195,7 +195,8 @@ if __name__ == '__main__':
     CLASSIFIERS_1 = Bagging(X_train, y_train, T, CLASSIFIERS[:2])
     CLASSIFIERS_2 = Adaboost(X_train, y_train, T, CLASSIFIERS[2:])
     models = CLASSIFIERS_1 + CLASSIFIERS_2
-    pkl_files = ["knn_pickle.pkl", "forest_pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
+    pkl_files = ["knn_pickle.pkl", "forest_pkl.pkl", "tree_pickle.pkl", "logistic_pickle.pkl"]
     for i in range(len(pkl_files)):
         with open(pkl_files[i], 'wb') as file:
             pickle.dump(models[i], file)
+
